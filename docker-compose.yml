@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+      MONGO_INITDB_DATABASE: fvck
+    ports:
+      - 27017:27017
+
+  application:
+    image: fvck
+    environment:
+      MONGO_CONNECTION_STRING: mongodb://root:toor@mongo:27017
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    command: npm start

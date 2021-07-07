@@ -1,0 +1,1 @@
+export MONGO_CONNECTION_STRING=mongodb://root:toor@localhost:27017
