@@ -11,10 +11,18 @@ services:
     ports:
       - 27017:27017
 
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 26379:6379
+
   application:
     image: fvck
     environment:
       MONGO_CONNECTION_STRING: mongodb://root:toor@mongo:27017
+      REDIS_CONNECTION_HOST: redis
+      REDIS_CONNECTION_PORT: 6379
     ports:
       - 3000:3000
     volumes:

@@ -1,4 +1,5 @@
 import routers from "./routes/main"
+import middlewares from "./middlewares/main"
 import Koa from "koa"
 import mongoose from "mongoose"
 
@@ -10,11 +11,15 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
     bufferMaxEntries: 0,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: 'fvck'
+    dbName: process.env.MONGO_DATABASE_NAME || 'fvck'
 })
 
 for (let subRouter of routers) {
     app.use(subRouter.routes())
+}
+
+for (let middleware of middlewares) {
+    app.use(middleware)
 }
 
 app.listen(3000, () => {
