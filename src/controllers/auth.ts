@@ -1,9 +1,9 @@
 import UserModel from "../schemas/user"
 import { uploadImage, validFile } from "../utils/storage"
-import { Context } from "koa"
-import { RedisClient } from "redis"
-import { generate as createHash } from 'password-hash'
+import { createToken } from "../utils/jwt"
+import { generate as createHash, verify as verifyHash } from 'password-hash'
 import { v4 } from 'uuid'
+import { Context } from "koa"
 
 
 export class RegistrationController {
@@ -39,34 +39,54 @@ export class RegistrationController {
                 return
             }
         }
-        data.password  = createHash(data.password)
 
-        const user = new UserModel(data)
         try {
+            data.password  = createHash(data.password)
+            const user = new UserModel(data)
             await user.save()
         } catch (error) {
             ctx.body = {
                 status: 'fail',
-                error: error.message
+                error: error.message.split(':')[0]
             }
             return
         }
 
-        const token = v4()
+        const token = createToken(ctx, data.nickname)
         ctx.body = {
             status: 'ok',
             token
         }
-        const redis: RedisClient = ctx.redisClient
-        redis.set(token, data.nickname)
     }
 }
 
 
 export class LoginController extends RegistrationController {
     async post(ctx: Context) {
+        const data = <any>ctx.request.body
+        const user = <any>(await UserModel.findOne({
+            nickname: data.nickname
+        }))
+
+        if (!user) {
+            ctx.body = {
+                status: 'fail',
+                error: 'Users would not be found for such a request'
+            }
+            return
+        }
+        if (!verifyHash(data.password, user.password)) {
+            ctx.body = {
+                status: 'fail',
+                error: 'Wrong password was entered'
+            }
+            return
+        }
+
+        const token = createToken(ctx, data.nickname)
         ctx.body = {
-            detail: 'to be continued!'
+            status: 'ok',
+            token
         }
     }
 }

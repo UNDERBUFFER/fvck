@@ -4,6 +4,8 @@ import mongoose from "mongoose"
 const schema = new mongoose.Schema({
     nickname: {
         type: String,
+        minLength: 2,
+        maxLength: 20,
         required: true,
         unique: true
     },
