@@ -20,11 +20,8 @@ router.post('/user/:nickname/', loginRequired, userController.post)
 router.get('/user/:nickname/friends/', friendsController.get)
 router.get('/user/:nickname/pages/', pagesController.get)
 
-router.get('/user/:nickname/friends/', friendsController.get)
-router.get('/user/:nickname/pages/', pagesController.get)
-
-router.get('/user/:nickname/add-friendship/', addShipController.post)
-router.get('/user/:nickname/delete-friendship/', deleteShipController.post)
+router.post('/user/:nickname/add-friendship/', addShipController.post)
+router.post('/user/:nickname/delete-friendship/', deleteShipController.post)
 
 
 export default router
