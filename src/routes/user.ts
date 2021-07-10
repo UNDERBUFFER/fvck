@@ -1,5 +1,6 @@
 import { UserController, FriendsController, PagesController, AddFriendshipController, DeleteFriendshipController } from '../controllers/user'
 import Router from "koa-router"
+import { loginRequired } from '../utils/auth'
 
 
 const userController = new UserController()
@@ -9,8 +10,12 @@ const addShipController = new AddFriendshipController()
 const deleteShipController = new DeleteFriendshipController
 const router = new Router()
 
-router.get('/user/:nickname/', userController.get)
-router.post('/auth/registration/', userController.post)
+
+router.get('/user/', loginRequired, userController.get)
+router.post('/user/', loginRequired, userController.post)
+
+router.get('/user/:nickname/', loginRequired, userController.get)
+router.post('/user/:nickname/', loginRequired, userController.post)
 
 router.get('/user/:nickname/friends/', friendsController.get)
 router.get('/user/:nickname/pages/', pagesController.get)

@@ -1,4 +1,5 @@
 import UserModel from "../schemas/user"
+import { setupUserForm } from "../utils/forms"
 import { uploadImage, validFile } from "../utils/storage"
 import { createToken } from "../utils/jwt"
 import { generate as createHash, verify as verifyHash } from 'password-hash'
@@ -9,19 +10,7 @@ import { Context } from "koa"
 export class RegistrationController {
     get(ctx: Context) {
         ctx.body = {
-            nickname: {
-                type: 'String',
-                required: true,
-                unique: true
-            },
-            password: {
-                type: 'String',
-                required: true,
-            },
-            avatar: {
-                type: 'String | Boolean',
-                required: false,
-            }
+            form: setupUserForm('String', 'String', 'String | null | undefined')
         }
     }
 
@@ -36,6 +25,7 @@ export class RegistrationController {
                     status: 'fail',
                     error: 'Invalid image type'
                 }
+                ctx.status = 400
                 return
             }
         }
@@ -49,6 +39,7 @@ export class RegistrationController {
                 status: 'fail',
                 error: error.message.split(':')[0]
             }
+            ctx.status = 400
             return
         }
 
@@ -73,6 +64,7 @@ export class LoginController extends RegistrationController {
                 status: 'fail',
                 error: 'Users would not be found for such a request'
             }
+            ctx.status = 400
             return
         }
         if (!verifyHash(data.password, user.password)) {
@@ -80,6 +72,7 @@ export class LoginController extends RegistrationController {
                 status: 'fail',
                 error: 'Wrong password was entered'
             }
+            ctx.status = 403
             return
         }
 

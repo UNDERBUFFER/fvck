@@ -6,6 +6,7 @@ const regController = new RegistrationController()
 const logController = new LoginController()
 const router = new Router()
 
+
 router.get('/auth/registration/', regController.get)
 router.post('/auth/registration/', regController.post)
 
