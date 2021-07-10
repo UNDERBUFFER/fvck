@@ -7,8 +7,8 @@ const client = new RedisClient({
     port: Number(process.env.REDIS_CONNECTION_PORT || 6379)
 })
 
-export default function redisConnection(ctx: Context, next: Next) {
+export default async function redisConnection(ctx: Context, next: Next) {
     ctx.redisClient = client
-    next()
+    await next()
 }
 

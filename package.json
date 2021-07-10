@@ -11,20 +11,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/file-type": "^10.9.1",
     "@types/koa": "^2.13.3",
-    "@types/koa-bodyparser": "^4.3.1",
+    "@types/koa-bodyparser": "^4.3.2",
     "@types/koa-json": "^2.0.18",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-router": "^7.4.2",
     "@types/mongoose": "^5.11.97",
+    "@types/password-hash": "^1.2.21",
     "@types/redis": "^2.8.31",
+    "@types/uuid": "^8.3.1",
+    "file-type": "^16.5.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "mongoose": "^5.13.2",
-    "redis": "^3.1.2"
+    "password-hash": "^1.2.2",
+    "redis": "^3.1.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.9"
