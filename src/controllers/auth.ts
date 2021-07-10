@@ -2,8 +2,7 @@ import UserModel from "../schemas/user"
 import { setupUserForm } from "../utils/forms"
 import { uploadImage, validFile } from "../utils/storage"
 import { createToken } from "../utils/jwt"
-import { generate as createHash, verify as verifyHash } from 'password-hash'
-import { v4 } from 'uuid'
+import { generate as createHash, verify as verifyHash } from "password-hash"
 import { Context } from "koa"
 
 

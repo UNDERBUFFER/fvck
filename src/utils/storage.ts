@@ -1,6 +1,6 @@
-import fs from 'fs'
-import abs from 'path'
-import FileType from 'file-type'
+import fs from "fs"
+import abs from "path"
+import FileType from "file-type"
 
 
 export async function validFile(img: string): Promise<Boolean> {

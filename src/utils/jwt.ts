@@ -1,7 +1,7 @@
-import { v4 } from 'uuid'
+import { v4 } from "uuid"
 import { promisify } from "util"
-import { Context } from 'koa'
-import { RedisClient } from 'redis'
+import { Context } from "koa"
+import { RedisClient } from "redis"
 
 
 export function createToken(ctx: Context, nickname: string): string {

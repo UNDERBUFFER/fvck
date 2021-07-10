@@ -1,4 +1,4 @@
-import { RegistrationController, LoginController } from '../controllers/auth'
+import { RegistrationController, LoginController } from "../controllers/auth"
 import Router from "koa-router"
 
 

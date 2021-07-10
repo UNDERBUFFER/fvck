@@ -1,4 +1,4 @@
-import Controller from '../controllers/default'
+import Controller from "../controllers/default"
 import Router from "koa-router"
 
 
