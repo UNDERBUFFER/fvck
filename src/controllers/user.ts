@@ -21,6 +21,19 @@ export class FriendsController {
             detail: 'to be continued!'
         }
     }
+}
+
+
+export class PagesController {
+    get(ctx: Context) {
+        ctx.body = {
+            detail: 'to be continued!'
+        }
+    }
+}
+
+
+export class AddFriendshipController {
     post(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
@@ -29,8 +42,8 @@ export class FriendsController {
 }
 
 
-export class PagesController {
-    get(ctx: Context) {
+export class DeleteFriendshipController {
+    post(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
         }
