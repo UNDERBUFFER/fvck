@@ -6,6 +6,11 @@ const schema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     endpoint: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +25,22 @@ const schema = new mongoose.Schema({
         }
     ]
 })
+
+
+const populationFields = 'endpoint user'
+
+schema.post('save', async (doc) => {
+    await doc.populate(populationFields).execPopulate()
+})
+
+function populateFields() {
+    this.populate(populationFields)
+}
+
+schema.pre('find', populateFields)
+schema.pre('findOne', populateFields)
+schema.pre('findOneAndUpdate', populateFields)
+
 
 const model = mongoose.model("Post", schema)
 

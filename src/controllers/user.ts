@@ -1,24 +1,17 @@
 import UserModel from "../schemas/user"
+import FriendsModel from "../schemas/friendship"
+import PagesModel from "../schemas/post"
 import { setupUserForm } from "../utils/forms"
-import { Context } from "koa"
 import { validFile, uploadImage } from "../utils/storage"
 import { updateToken } from "../utils/jwt"
+import { getUserByNickname } from "../utils/user"
+import { Context } from "koa"
 
 
 export class UserController {
     async get(ctx: Context) {
-        let nickname = ctx.params.nickname
-        let user: any = null
-
-        if (!nickname || nickname == ctx.user.nickname) {
-            nickname = ctx.user.nickname
-            user = ctx.user
-        }
-        else {
-            user = await UserModel.findOne({
-                nickname
-            })
-        }
+        const user = await getUserByNickname(ctx)
+        const nickname = user.nickname
 
         if (user) {
             ctx.body = { user }
@@ -78,36 +71,105 @@ export class UserController {
 
 
 export class FriendsController {
-    get(ctx: Context) {
+    async get(ctx: Context) {
+        const user = await getUserByNickname(ctx)
+
+        const friends: any[] = await FriendsModel.find({
+            $or: [
+                { user },
+                { endpoint: user }
+            ]
+        })
+
         ctx.body = {
-            detail: 'to be continued!'
+            friends
         }
     }
 }
 
 
 export class PagesController {
-    get(ctx: Context) {
+    async get(ctx: Context) {
+        const user = await getUserByNickname(ctx)
+        const nickname = user.nickname
+        let query: any = {}
+        if (nickname == ctx.user.nickname) query = {
+            $or: [
+                { user },
+                { endpoint: { $in: ctx.user } }
+            ]
+        }
+        else query = {
+            user,
+            endpoint: { $in: ctx.user }
+        }
+
+        const pages: any[] = await PagesModel.find(query)
+
         ctx.body = {
-            detail: 'to be continued!'
+            pages
         }
     }
 }
 
 
 export class AddFriendshipController {
-    post(ctx: Context) {
+    async post(ctx: Context) {
+        const user = await getUserByNickname(ctx)
+        const nickname = user.nickname
+        if (nickname == ctx.user.nickname) {
+            ctx.body = {
+                status: 'fail',
+                error: 'You can\'t create friendship with yourself'
+            }
+            ctx.status = 400
+            return
+        }
+
+        const friendship = new FriendsModel({ // TODO если такой дружбы нет, а если есть - подтвердить
+            user: ctx.user,
+            endpoint: user,
+            confirmed: false
+        })
+        try {
+            await friendship.save()
+        } catch (error) {
+            ctx.body = {
+                status: 'fail',
+                error: error.message.split(':')[0]
+            }
+            ctx.status = 400
+            return
+        }
         ctx.body = {
-            detail: 'to be continued!'
+            status: 'ok'
         }
     }
 }
 
 
 export class DeleteFriendshipController {
-    post(ctx: Context) {
+    async post(ctx: Context) {
+        const user = await getUserByNickname(ctx)
+        const nickname = user.nickname
+        if (nickname == ctx.user.nickname) {
+            ctx.body = {
+                status: 'fail',
+                error: 'You can\'t destroy friendship with yourself'
+            }
+            ctx.status = 400
+            return
+        }
+
+        await FriendsModel.deleteOne({
+            $or: [
+                { user, endpoint: ctx.user  },
+                { user: ctx.user, endpoint: user }
+            ]
+        })
+
         ctx.body = {
-            detail: 'to be continued!'
+            status: 'ok'
         }
     }
 }
