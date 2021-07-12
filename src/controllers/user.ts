@@ -126,11 +126,22 @@ export class AddFriendshipController {
             return
         }
 
-        const friendship = new FriendsModel({ // TODO если такой дружбы нет, а если есть - подтвердить
-            user: ctx.user,
-            endpoint: user,
-            confirmed: false
+        let friendship: any = await FriendsModel.findOne({
+            user,
+            endpoint: ctx.user
         })
+
+        if (friendship) {
+            friendship.confirmed = true
+        }
+        else {
+            friendship = new FriendsModel({
+                user: ctx.user,
+                endpoint: user,
+                confirmed: false
+            })
+        }
+
         try {
             await friendship.save()
         } catch (error) {
