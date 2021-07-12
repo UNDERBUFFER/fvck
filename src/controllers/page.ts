@@ -7,7 +7,7 @@ export class AddPageController {
             detail: 'to be continued!'
         }
     }
-    post(ctx: Context) {
+    async post(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
         }
@@ -16,12 +16,12 @@ export class AddPageController {
 
 
 export class EditPageController {
-    get(ctx: Context) {
+    async get(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
         }
     }
-    post(ctx: Context) {
+    async post(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
         }
@@ -30,7 +30,7 @@ export class EditPageController {
 
 
 export class DeletePageController {
-    post(ctx: Context) {
+    async post(ctx: Context) {
         ctx.body = {
             detail: 'to be continued!'
         }
