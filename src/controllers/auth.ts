@@ -1,5 +1,6 @@
 import UserModel from "../schemas/user"
 import { setupUserForm } from "../utils/forms"
+import { response200, response400, response403 } from "../utils/response"
 import { uploadImage, validFile } from "../utils/storage"
 import { createToken } from "../utils/jwt"
 import { generate as createHash, verify as verifyHash } from "password-hash"
@@ -8,9 +9,9 @@ import { Context } from "koa"
 
 export class RegistrationController {
     get(ctx: Context) {
-        ctx.body = {
+        response200(ctx, {
             form: setupUserForm('String', 'String', 'String | null | undefined')
-        }
+        })
     }
 
     async post(ctx: Context) {
@@ -20,11 +21,9 @@ export class RegistrationController {
                 data.avatar = await uploadImage(data.avatar)
             }
             else {
-                ctx.body = {
-                    status: 'fail',
+                response400(ctx, {
                     error: 'Invalid image type'
-                }
-                ctx.status = 400
+                })
                 return
             }
         }
@@ -34,19 +33,14 @@ export class RegistrationController {
             const user = new UserModel(data)
             await user.save()
         } catch (error) {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: error.message.split(':')[0]
-            }
-            ctx.status = 400
+            })
             return
         }
 
         const token = createToken(ctx, data.nickname)
-        ctx.body = {
-            status: 'ok',
-            token
-        }
+        response200(ctx, { token })
     }
 }
 
@@ -59,27 +53,20 @@ export class LoginController extends RegistrationController {
         }))
 
         if (!user) {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: 'Users would not be found for such a request'
-            }
-            ctx.status = 400
+            })
             return
         }
         if (!verifyHash(data.password, user.password)) {
-            ctx.body = {
-                status: 'fail',
+            response403(ctx, {
                 error: 'Wrong password was entered'
-            }
-            ctx.status = 403
+            })
             return
         }
 
         const token = createToken(ctx, data.nickname)
-        ctx.body = {
-            status: 'ok',
-            token
-        }
+        response200(ctx, { token })
     }
 }
 

@@ -2,6 +2,7 @@ import UserModel from "../schemas/user"
 import FriendsModel from "../schemas/friendship"
 import PagesModel from "../schemas/post"
 import { setupUserForm } from "../utils/forms"
+import { response200, response400, response403 } from "../utils/response"
 import { validFile, uploadImage } from "../utils/storage"
 import { updateToken } from "../utils/jwt"
 import { getUserByNickname } from "../utils/user"
@@ -13,31 +14,29 @@ export class UserController {
         const user = await getUserByNickname(ctx)
         const nickname = user.nickname
 
+        let body: any = {}
         if (user) {
-            ctx.body = { user }
+            body = { user }
             if (nickname == ctx.user.nickname) {
-                ctx.body =  {
-                    ...(ctx.body as object),
+                body =  {
+                    ...body,
                     form: setupUserForm('String | null | undefined', 'String | null | undefined', 'String | null | undefined')
                 }
             }
+            response200(ctx, { body })
         }
         else {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: 'Users would not be found for such a request'
-            }
-            ctx.status = 400
+            })
         }
     }
 
     async post(ctx: Context) {
         if (ctx.params.nickname && (ctx.params.nickname != ctx.user.nickname)) {
-            ctx.body = {
-                status: 'fail',
+            response403(ctx, {
                 error: 'The end user is different from the real one'
-            }
-            ctx.status = 403
+            })
             return
         }
 
@@ -47,11 +46,9 @@ export class UserController {
                 data.avatar = await uploadImage(data.avatar)
             }
             else {
-                ctx.body = {
-                    status: 'fail',
+                response400(ctx, {
                     error: 'Invalid image type'
-                }
-                ctx.status = 400
+                })
                 return
             }
         }
@@ -63,9 +60,9 @@ export class UserController {
         }))
         updateToken(ctx, newUser.nickname)
 
-        ctx.body = {
+        response200(ctx, {
             user: newUser
-        }
+        })
     }
 }
 
@@ -81,9 +78,7 @@ export class FriendsController {
             ]
         })
 
-        ctx.body = {
-            friends
-        }
+        response200(ctx, { friends })
     }
 }
 
@@ -106,9 +101,7 @@ export class PagesController {
 
         const pages: any[] = await PagesModel.find(query)
 
-        ctx.body = {
-            pages
-        }
+        response200(ctx, { pages })
     }
 }
 
@@ -118,11 +111,9 @@ export class AddFriendshipController {
         const user = await getUserByNickname(ctx)
         const nickname = user.nickname
         if (nickname == ctx.user.nickname) {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: 'You can\'t create friendship with yourself'
-            }
-            ctx.status = 400
+            })
             return
         }
 
@@ -145,16 +136,12 @@ export class AddFriendshipController {
         try {
             await friendship.save()
         } catch (error) {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: error.message.split(':')[0]
-            }
-            ctx.status = 400
+            })
             return
         }
-        ctx.body = {
-            status: 'ok'
-        }
+        response200(ctx, {})
     }
 }
 
@@ -164,11 +151,9 @@ export class DeleteFriendshipController {
         const user = await getUserByNickname(ctx)
         const nickname = user.nickname
         if (nickname == ctx.user.nickname) {
-            ctx.body = {
-                status: 'fail',
+            response400(ctx, {
                 error: 'You can\'t destroy friendship with yourself'
-            }
-            ctx.status = 400
+            })
             return
         }
 
@@ -179,9 +164,7 @@ export class DeleteFriendshipController {
             ]
         })
 
-        ctx.body = {
-            status: 'ok'
-        }
+        response200(ctx, {})
     }
 }
 
