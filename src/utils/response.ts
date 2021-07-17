@@ -1,4 +1,4 @@
-import { Context } from "koa";
+import { Context } from "koa"
 
 
 export function response200(ctx: Context, responseData: any) {

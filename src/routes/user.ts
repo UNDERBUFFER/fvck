@@ -1,6 +1,6 @@
 import { UserController, FriendsController, PagesController, AddFriendshipController, DeleteFriendshipController } from "../controllers/user"
-import Router from "koa-router"
 import { loginRequired } from "../utils/auth"
+import Router from "koa-router"
 
 
 const userController = new UserController()

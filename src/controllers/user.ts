@@ -1,6 +1,6 @@
 import UserModel from "../schemas/user"
 import FriendsModel from "../schemas/friendship"
-import PagesModel from "../schemas/post"
+import PagesModel from "../schemas/page"
 import { setupUserForm } from "../utils/forms"
 import { response200, response400, response403 } from "../utils/response"
 import { validFile, uploadImage } from "../utils/storage"

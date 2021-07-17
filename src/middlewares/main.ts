@@ -1,14 +1,14 @@
 import identifyUser from "./auth"
 import redisConnection from "./redis"
-import { Middleware } from "koa"
 import bodyParser from "koa-bodyparser"
 import logger from "koa-logger"
+import { Middleware } from "koa"
 
 
 const middlewares: Middleware[] = [
     redisConnection,
     identifyUser,
-    bodyParser(),
+    bodyParser({jsonLimit: '50mb'}),
     logger()
 ]
 

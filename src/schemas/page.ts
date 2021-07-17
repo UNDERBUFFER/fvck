@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { MongooseAutoIncrementID } from 'mongoose-auto-increment-reworked'
 
 
 const schema = new mongoose.Schema({
@@ -15,15 +16,30 @@ const schema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            required: false
         }
     ],
     attachment: [
         {
             type: String,
-            required: false
+            required: true
         }
-    ]
+    ],
+    numberId: {
+        type: Number,
+        default: 0
+    }
+})
+
+
+MongooseAutoIncrementID.initialise()
+const plugin = new MongooseAutoIncrementID(schema, 'Page', {
+    field: 'numberId'
+})
+plugin.applyPlugin()
+
+schema.plugin(MongooseAutoIncrementID.plugin, {
+    modelName: 'Page'
 })
 
 
@@ -41,8 +57,8 @@ schema.pre('find', populateFields)
 schema.pre('findOne', populateFields)
 schema.pre('findOneAndUpdate', populateFields)
 
+const model = mongoose.model("Page", schema)
 
-const model = mongoose.model("Post", schema)
 
 export default model
 

@@ -1,6 +1,6 @@
 import { AddPageController, EditPageController, DeletePageController } from "../controllers/page"
-import Router from "koa-router"
 import { loginRequired } from "../utils/auth"
+import Router from "koa-router"
 
 
 const addController = new AddPageController()

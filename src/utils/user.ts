@@ -1,5 +1,5 @@
 import UserModel from "../schemas/user"
-import { Context } from "koa";
+import { Context } from "koa"
 
 
 export async function getUserByNickname(ctx: Context): Promise<any> {

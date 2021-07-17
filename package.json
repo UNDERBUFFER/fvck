@@ -28,6 +28,7 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "mongoose": "^5.13.2",
+    "mongoose-auto-increment-reworked": "^1.2.1",
     "password-hash": "^1.2.2",
     "redis": "^3.1.2",
     "uuid": "^8.3.2"
