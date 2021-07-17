@@ -12,7 +12,9 @@ const routers: Router[] = [
     pageRouter
 ]
 
-const router = new Router()
+const router = new Router({
+    prefix: '/api'
+})
 
 router.use(...(routers.map( router => router.routes() )))
 
